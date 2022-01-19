@@ -1,16 +1,12 @@
 module BeGateway
   class Base < OpenStruct
-    attr_reader :code
+    attr_reader :http_status_code
 
     def initialize(response)
-      @code = response.status
+      @http_status_code = response.status
       @params = response.body
 
       super(response.body)
-    end
-
-    def to_params
-      params.merge('code' => code)
     end
 
     private
