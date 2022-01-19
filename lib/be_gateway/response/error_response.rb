@@ -16,6 +16,14 @@ module BeGateway
       @message ||= self['response']['message']
     end
 
+    def friendly_message
+      @friendly_message ||= self['response']['friendly_message']
+    end
+
+    def code
+      @code ||= self['response']['code']
+    end
+
     private
 
     class Errors < OpenStruct
