@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe 'BeGateway::Connection' do
+describe 'BeGatewayV2::Connection' do
   class TestConnection
-    include BeGateway::Connection
+    include BeGatewayV2::Connection
   end
 
   let(:headers) { nil }

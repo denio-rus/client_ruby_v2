@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGateway::ClientV2 do
+describe BeGatewayV2::Client do
   let(:params) do
     {
       shop_id: 1,

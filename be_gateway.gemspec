@@ -5,7 +5,7 @@ require 'be_gateway/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "be_gateway_v2"
-  gem.version       = BeGateway::VERSION
+  gem.version       = BeGatewayV2::VERSION
   gem.authors       = ["Pavel Gabriel", "Mac Shifford"]
   gem.email         = ["alovak@gmail.com", "shiroginne@gmail.com"]
   gem.description   = %q{Client for BeGateway processing platform}

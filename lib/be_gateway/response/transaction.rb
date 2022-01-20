@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV2
   class Transaction < OpenStruct
     def successful?
       self[:status] == "successful"

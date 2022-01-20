@@ -21,7 +21,7 @@ Or install it yourself as:
 ### Intialization client
 
 ``` ruby
-client = BeGateway::Client.new({
+client = BeGatewayV2::Client.new({
   shop_id: 'YOUR SHOP ID',
   secret_key: 'YOUR SHOP SECRET KEY',
   url: 'YOUR GATEWAY URL'

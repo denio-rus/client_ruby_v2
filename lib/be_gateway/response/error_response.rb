@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV2
   class ErrorResponse < Base
     def status
       'error'

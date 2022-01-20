@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGateway::Checkout do
+describe BeGatewayV2::Checkout do
   let(:params) do
     {
       shop_id: 1,

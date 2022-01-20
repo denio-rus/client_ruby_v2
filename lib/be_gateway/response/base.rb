@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV2
   class Base < OpenStruct
     attr_reader :http_status_code
 

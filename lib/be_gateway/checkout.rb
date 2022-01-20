@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV2
   class Checkout
     include Connection
 

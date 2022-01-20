@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV2
   class AsyncResponse
     attr_reader :status, :body
 
