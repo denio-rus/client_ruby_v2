@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'be_gateway'
+    gem 'be_gateway_v2'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install be_gateway
+    $ gem install be_gateway_v2
 
 ## Usage
 
