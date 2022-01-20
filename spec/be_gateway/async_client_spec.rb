@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGateway::AsyncClient do
+describe BeGateway::AsyncClientV2 do
   let(:params) do
     {
       shop_id: 1,

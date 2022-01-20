@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGateway::Client do
+describe BeGateway::ClientV2 do
   let(:params) do
     {
       shop_id: 1,
@@ -42,7 +42,7 @@ describe BeGateway::Client do
     end
   end
 
-  describe 'verify_p2p' do
+  describe 'verify_p2p api v2' do
     let(:client) { described_class.new(params) }
     let(:request_params) do
       {
@@ -54,14 +54,17 @@ describe BeGateway::Client do
       }
     end
     let(:response_body) do
-      {
-        "status"  => "successful",
-        "message" => "p2p is allowed",
-        "required_fields" => {
-          "credit_card"    => ["holder"],
-          "recipient_card" => ["holder"]
-        },
-        "commission" => { "minimum" => 0.7, "percent" => 1.5, "currency":"USD" }
+      { "transaction" => {
+          "status"  => "successful",
+          "message" => "p2p is allowed",
+          "friendly_message" => "",
+          "code" => "S.000099",
+          "required_fields" => {
+            "credit_card"    => ["holder"],
+            "recipient_card" => ["holder"]
+          },
+          "commission" => { "minimum" => 0.7, "percent" => 1.5, "currency":"USD" }
+        }
       }
     end
     let(:successful_response) { OpenStruct.new(status: 200, body: response_body) }
@@ -71,31 +74,35 @@ describe BeGateway::Client do
     it 'verifies p2p' do
       response = client.verify_p2p(request_params)
 
-      expect(response.code).to eq 200
-      expect(response.status).to eq('successful')
-      expect(response.successful?).to be true
-      expect(response.message).to eq('p2p is allowed')
 
-      expect(response.required_fields['recipient_card']).to eq(['holder'])
-      expect(response.commission['minimum']).to eq(0.7)
-      expect(response.commission['percent']).to eq(1.5)
+      expect(response.http_status_code).to eq 200
+      expect(response.transaction.status).to eq('successful')
+      expect(response.transaction.successful?).to be true
+      expect(response.transaction.message).to eq('p2p is allowed')
 
-      expect(response.error?).to be false
+      expect(response.transaction.required_fields['recipient_card']).to eq(['holder'])
+      expect(response.transaction.commission['minimum']).to eq(0.7)
+      expect(response.transaction.commission['percent']).to eq(1.5)
+
+      # expect(response.error?).to be false
       expect(response.error_code).to be nil
       expect(response.errors).to be nil
     end
 
     context 'when response is error' do
       let(:response_body) do
-        {
-          "message" => "Unprocessable entity",
-          "errors" => {
-            "amount"    => ["must be an integer"],
-            "currency"  => ["is unknown ISO 4217 Alpha-3 code"],
-            "credit_card"    => {"number" => ["is not a card number"]},
-            "recipient_card" => {"number" => ["is not a card number"]}
-          },
-          "error_code" => "invalid_params"
+        { "response" => {
+            "message" => "Unprocessable entity",
+            "code" => "E.002699",
+            "friendly_message" => "Invalid request params",
+            "errors" => {
+              "amount"    => ["must be an integer"],
+              "currency"  => ["is unknown ISO 4217 Alpha-3 code"],
+              "credit_card"    => {"number" => ["is not a card number"]},
+              "recipient_card" => {"number" => ["is not a card number"]}
+            },
+            "error_code" => "invalid_params"
+          }
         }
       end
       let(:error_response) { OpenStruct.new(status: 422, body: response_body) }
@@ -105,15 +112,12 @@ describe BeGateway::Client do
       it "returns errors" do
         response = client.verify_p2p(request_params)
 
-        expect(response.code).to eq 422
-        expect(response.successful?).to be false
+        expect(response.http_status_code).to eq 422
         expect(response.message).to eq('Unprocessable entity')
+        expect(response.status).to eq 'error'
 
-        expect(response.error?).to be true
-        expect(response.error_code).to eq('invalid_params')
         expect(response.errors["amount"]).to eq(['must be an integer'])
         expect(response.errors["currency"]).to eq(['is unknown ISO 4217 Alpha-3 code'])
-
         expect(response.errors["credit_card"]["number"]).to eq(['is not a card number'])
         expect(response.errors["recipient_card"]["number"]).to eq(['is not a card number'])
       end
@@ -258,7 +262,7 @@ describe BeGateway::Client do
       it 'returns transaction information' do
         response = client.authorize(request_params)
 
-        expect(response.code).to eq 200
+        expect(response.http_status_code).to eq 200
         expect(response.successful?).to eq(true)
         expect(response.transaction['currency']).to eq('USD')
         expect(response.transaction['amount']).to eq(100)
