@@ -80,7 +80,8 @@ module BeGatewayV2
 
     def apply_api_version
       if @api_version.match(/^\d+$/)
-        @passed_headers.merge({ 'X-API-VERSION' => @api_version })
+        api_header = { 'X-API-VERSION' => @api_version }
+        @passed_headers = @passed_headers ? @passed_headers.merge(api_header) : api_header
       end
     end
 
