@@ -1,5 +1,5 @@
 module BeGateway
-  class AsyncClient < Client
+  class AsyncClientV2 < Client
     def result(params)
       path = "/result/#{params[:request_id]}"
       send_request('get', path)

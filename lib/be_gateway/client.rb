@@ -1,5 +1,5 @@
 module BeGateway
-  class Client
+  class ClientV2
     include Connection
 
     TRANSACTIONS = %w(authorize authorization capture void payment credit payout chargeback
@@ -63,7 +63,7 @@ module BeGateway
       if tr_type == 'authorize'
         logger.warn "Method 'authorize' was deprecated! Please, use 'authorization' for BeGateway::Client." if logger
         '/transactions/authorizations'
-      elsif tr == 'verify_p2p'
+      elsif tr_type == 'verify_p2p'
         '/p2p-restrictions'
       else
         "/transactions/#{tr_type}s"
