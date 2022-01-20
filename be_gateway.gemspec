@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'be_gateway/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "be_gateway"
+  gem.name          = "be_gateway_v2"
   gem.version       = BeGateway::VERSION
   gem.authors       = ["Pavel Gabriel", "Mac Shifford"]
   gem.email         = ["alovak@gmail.com", "shiroginne@gmail.com"]
