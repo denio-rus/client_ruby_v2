@@ -17,11 +17,12 @@ module BeGateway
     end
 
     def friendly_message
-      @friendly_message ||= self['response']['friendly_message']
+      @friendly_message ||= self.dig('response', 'friendly_message')
     end
 
     def code
-      @code ||= self['response']['code']
+
+      @code ||= self.dig('response', 'code')
     end
 
     private
