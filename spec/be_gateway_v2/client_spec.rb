@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGatewayV2::Client do
+describe BeGatewayV3::Client do
   let(:params) do
     {
       shop_id: 1,
@@ -42,7 +42,7 @@ describe BeGatewayV2::Client do
     end
   end
 
-  describe 'verify_p2p api v2' do
+  describe 'verify_p2p api v3' do
     let(:client) { described_class.new(params) }
     let(:request_params) do
       {

@@ -1,4 +1,4 @@
-module BeGatewayV2
+module BeGatewayV3
   class Response < Base
     def successful?
       true

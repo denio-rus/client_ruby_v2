@@ -1,4 +1,4 @@
-module BeGatewayV2
+module BeGatewayV3
   class Client
     include Connection
 
@@ -66,7 +66,7 @@ module BeGatewayV2
 
     def action_url(tr_type)
       if tr_type == 'authorize'
-        logger.warn "Method 'authorize' was deprecated! Please, use 'authorization' for BeGatewayV2::Client." if logger
+        logger.warn "Method 'authorize' was deprecated! Please, use 'authorization' for BeGatewayV3::Client." if logger
         '/transactions/authorizations'
       elsif tr_type == 'verify_p2p'
         '/p2p-restrictions'

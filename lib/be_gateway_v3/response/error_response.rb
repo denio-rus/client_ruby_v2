@@ -1,4 +1,4 @@
-module BeGatewayV2
+module BeGatewayV3
   class ErrorResponse < Base
     def status
       'error'
@@ -21,7 +21,6 @@ module BeGatewayV2
     end
 
     def code
-
       @code ||= self.dig('response', 'code')
     end
 

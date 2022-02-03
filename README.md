@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'be_gateway_v2'
+    gem 'be_gateway_v3'
 
 And then execute:
 
@@ -14,14 +14,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install be_gateway_v2
+    $ gem install be_gateway_v3
 
 ## Usage
 
 ### Intialization client
 
 ``` ruby
-client = BeGatewayV2::Client.new({
+client = BeGatewayV3::Client.new({
   shop_id: 'YOUR SHOP ID',
   secret_key: 'YOUR SHOP SECRET KEY',
   url: 'YOUR GATEWAY URL'

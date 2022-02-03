@@ -1,4 +1,4 @@
-module BeGatewayV2
+module BeGatewayV3
   module Connection
     extend ActiveSupport::Concern
     extend Forwardable
