@@ -9,19 +9,7 @@ module BeGatewayV3
     end
 
     def errors
-      @errors ||= Errors.new(self.dig('response', 'errors'))
-    end
-
-    def message
-      @message ||= self.dig('response', 'message')
-    end
-
-    def friendly_message
-      @friendly_message ||= self.dig('response', 'friendly_message')
-    end
-
-    def code
-      @code ||= self.dig('response', 'code')
+      @errors ||= Errors.new(self['errors'])
     end
 
     private

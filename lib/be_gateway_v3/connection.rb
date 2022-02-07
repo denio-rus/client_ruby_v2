@@ -38,13 +38,10 @@ module BeGatewayV3
             OpenStruct.new(
               status: 500,
               body: {
-                'response' => {
-                  'message' => 'Gateway is temporarily unavailable',
-                  'errors' => {
-                    'gateway' => 'is temporarily unavailable'
-                  }
-                }
-              }
+                      'message' => 'Gateway is temporarily unavailable',
+                      'friendly_message' => 'Gateway is temporarily unavailable',
+                      'errors' => {'gateway' => 'is temporarily unavailable' }
+                    }
             )
           end
 
