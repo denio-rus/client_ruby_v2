@@ -59,7 +59,7 @@ describe BeGatewayV3::AsyncClient do
         it 'returns success response' do
           response = subject
 
-          expect(response.status).to eq(200)
+          expect(response.http_status_code).to eq(200)
           expect(response.successful?).to eq(true)
           expect(response.failed?).to eq(false)
           expect(response.processing?).to eq(true)
@@ -96,7 +96,7 @@ describe BeGatewayV3::AsyncClient do
       it 'returns response' do
         res = client.result(request_params)
 
-        expect(res.status).to eq(200)
+        expect(res.http_status_code).to eq(200)
         expect(res.successful?).to eq(true)
         expect(res.failed?).to eq(false)
         expect(res.processing?).to eq(false)
@@ -125,7 +125,7 @@ describe BeGatewayV3::AsyncClient do
       it 'returns response' do
         res = client.result(request_params)
 
-        expect(res.status).to eq(425)
+        expect(res.http_status_code).to eq(425)
         expect(res.successful?).to eq(false)
         expect(res.failed?).to eq(false)
         expect(res.processing?).to eq(true)

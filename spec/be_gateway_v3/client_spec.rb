@@ -54,17 +54,16 @@ describe BeGatewayV3::Client do
       }
     end
     let(:response_body) do
-      { "transaction" => {
-          "status"  => "successful",
-          "message" => "p2p is allowed",
-          "friendly_message" => "",
-          "code" => "S.000099",
-          "required_fields" => {
-            "credit_card"    => ["holder"],
-            "recipient_card" => ["holder"]
-          },
-          "commission" => { "minimum" => 0.7, "percent" => 1.5, "currency":"USD" }
-        }
+      { 
+        "status"  => "successful",
+        "message" => "p2p is allowed",
+        "friendly_message" => "",
+        "code" => "S.000099",
+        "required_fields" => {
+          "credit_card"    => ["holder"],
+          "recipient_card" => ["holder"]
+        },
+        "commission" => { "minimum" => 0.7, "percent" => 1.5, "currency":"USD" }
       }
     end
     let(:successful_response) { OpenStruct.new(status: 200, body: response_body) }
@@ -76,13 +75,13 @@ describe BeGatewayV3::Client do
 
 
       expect(response.http_status_code).to eq 200
-      expect(response.transaction.status).to eq('successful')
-      expect(response.transaction.successful?).to be true
-      expect(response.transaction.message).to eq('p2p is allowed')
+      expect(response.status).to eq('successful')
+      expect(response.successful?).to be true
+      expect(response.message).to eq('p2p is allowed')
 
-      expect(response.transaction.required_fields['recipient_card']).to eq(['holder'])
-      expect(response.transaction.commission['minimum']).to eq(0.7)
-      expect(response.transaction.commission['percent']).to eq(1.5)
+      expect(response.required_fields['recipient_card']).to eq(['holder'])
+      expect(response.commission['minimum']).to eq(0.7)
+      expect(response.commission['percent']).to eq(1.5)
 
       # expect(response.error?).to be false
       expect(response.error_code).to be nil
@@ -91,18 +90,17 @@ describe BeGatewayV3::Client do
 
     context 'when response is error' do
       let(:response_body) do
-        { "response" => {
-            "message" => "Unprocessable entity",
-            "code" => "E.002699",
-            "friendly_message" => "Invalid request params",
-            "errors" => {
-              "amount"    => ["must be an integer"],
-              "currency"  => ["is unknown ISO 4217 Alpha-3 code"],
-              "credit_card"    => {"number" => ["is not a card number"]},
-              "recipient_card" => {"number" => ["is not a card number"]}
-            },
-            "error_code" => "invalid_params"
-          }
+        {
+          "message" => "Unprocessable entity",
+          "code" => "E.002699",
+          "friendly_message" => "Invalid request params",
+          "errors" => {
+            "amount"    => ["must be an integer"],
+            "currency"  => ["is unknown ISO 4217 Alpha-3 code"],
+            "credit_card"    => {"number" => ["is not a card number"]},
+            "recipient_card" => {"number" => ["is not a card number"]}
+          },
+          "error_code" => "invalid_params"
         }
       end
       let(:error_response) { OpenStruct.new(status: 422, body: response_body) }
@@ -210,104 +208,91 @@ describe BeGatewayV3::Client do
     context 'successful request' do
       let(:response_body) do
         {
-          'transaction' => {
-            'customer' => {
-              'ip' => '127.0.0.1',
-              'email' => 'john@example.com'
-            },
-            'credit_card' => {
-              'holder' => 'John Doe',
-              'stamp' => '3709786942408b77017a3aac8390d46d77d181e34554df527a71919a856d0f28',
-              'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e',
-              'brand' => 'visa',
-              'last_4' => '0000',
-              'first_1' => '4',
-              'exp_month' => 5,
-              'exp_year' => 2015
-            },
-            'billing_address' => {
-              'first_name' => 'John',
-              'last_name' => 'Doe',
-              'address' => '1st Street',
-              'country' => 'US',
-              'city' => 'Denver',
-              'zip' => '96002',
-              'state' => 'CO'
-            },
-            'authorization' => {
-              'auth_code' => '654321',
-              'bank_code' => '00',
-              'rrn' => '999',
-              'ref_id' => '777888',
-              'message' => 'The operation was successfully processed.',
-              'gateway_id' => 317,
-              'billing_descriptor' => 'TEST GATEWAY BILLING DESCRIPTOR',
-              'status' => 'successful'
-            },
-            'uid' => '4107-310b0da80b',
-            'status' => 'successful',
-            'message' => 'Successfully processed',
-            'amount' => 100,
-            'currency' => 'USD',
-            'description' => 'Test order',
-            'type' => 'authorization',
-            'tracking_id' => 'your_uniq_number',
-            'language' => 'en'
-          }
+          'customer' => {
+            'ip' => '127.0.0.1',
+            'email' => 'john@example.com'
+          },
+          'credit_card' => {
+            'holder' => 'John Doe',
+            'stamp' => '3709786942408b77017a3aac8390d46d77d181e34554df527a71919a856d0f28',
+            'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e',
+            'brand' => 'visa',
+            'last_4' => '0000',
+            'first_1' => '4',
+            'exp_month' => 5,
+            'exp_year' => 2015
+          },
+          'billing_address' => {
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address' => '1st Street',
+            'country' => 'US',
+            'city' => 'Denver',
+            'zip' => '96002',
+            'state' => 'CO'
+          },
+          'authorization' => {
+            'auth_code' => '654321',
+            'bank_code' => '00',
+            'rrn' => '999',
+            'ref_id' => '777888',
+            'message' => 'The operation was successfully processed.',
+            'gateway_id' => 317,
+            'billing_descriptor' => 'TEST GATEWAY BILLING DESCRIPTOR',
+            'status' => 'successful'
+          },
+          'uid' => '4107-310b0da80b',
+          'status' => 'successful',
+          'message' => 'Successfully processed',
+          'amount' => 100,
+          'currency' => 'USD',
+          'description' => 'Test order',
+          'type' => 'authorization',
+          'tracking_id' => 'your_uniq_number',
+          'language' => 'en'
         }
       end
       let(:successful_response) { OpenStruct.new(status: 200, body: response_body) }
       before { allow_any_instance_of(Faraday::Connection).to receive(:post).and_return(successful_response) }
 
       it 'returns transaction information' do
-        response = client.authorize(request_params)
+        response = client.authorization(request_params)
 
         expect(response.http_status_code).to eq 200
         expect(response.successful?).to eq(true)
-        expect(response.transaction['currency']).to eq('USD')
-        expect(response.transaction['amount']).to eq(100)
-        expect(response.transaction['credit_card']['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
-        expect(response.transaction['customer']['ip']).to eq('127.0.0.1')
-        expect(response.transaction['billing_address']['first_name']).to eq('John')
-        expect(response.transaction['uid']).to eq('4107-310b0da80b')
-      end
-
-      describe '#authorize' do
-        it 'sends authorization request' do
-          response = client.authorize(request_params)
-
-          expect(response.transaction['type']).to eq('authorization')
-          expect(response.transaction['authorization']['auth_code']).to eq('654321')
-        end
+        expect(response['currency']).to eq('USD')
+        expect(response['amount']).to eq(100)
+        expect(response['credit_card']['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
+        expect(response['customer']['ip']).to eq('127.0.0.1')
+        expect(response['billing_address']['first_name']).to eq('John')
+        expect(response['uid']).to eq('4107-310b0da80b')
       end
 
       describe '#authorization' do
         it 'sends authorization request' do
           response = client.authorization(request_params)
 
-          expect(response.transaction['type']).to eq('authorization')
-          expect(response.transaction['authorization']['auth_code']).to eq('654321')
+          expect(response.type).to eq('authorization')
+          expect(response.authorization['auth_code']).to eq('654321')
         end
       end
 
       describe '#charge' do
-        subject { client.charge(request_params) }
-
         it 'sends charge request' do
           expect_any_instance_of(Faraday::Connection)
             .to receive(:post)
             .with(%r{services/credit_cards/charges}, anything)
 
-          subject
+          response = client.charge(request_params)
 
-          expect(subject.transaction['type']).to eq('authorization')
-          expect(subject.transaction['authorization']['auth_code']).to eq('654321')
+          expect(response.type).to eq('authorization')
+          expect(response.authorization['auth_code']).to eq('654321')
         end
       end
 
       describe '#payment' do
         before do
-          response_body['transaction'].tap do |hsh|
+          response_body.tap do |hsh|
             hsh.delete('authorization')
             hsh['payment'] = {
               'auth_code' => '654321',
@@ -326,16 +311,16 @@ describe BeGatewayV3::Client do
         it 'sends payment request' do
           response = client.payment(request_params)
 
-          expect(response.transaction['type']).to eq('payment')
-          expect(response.transaction['payment']['auth_code']).to eq('654321')
-          expect(response.transaction['payment']['bank_code']).to eq('00')
+          expect(response['type']).to eq('payment')
+          expect(response['payment']['auth_code']).to eq('654321')
+          expect(response['payment']['bank_code']).to eq('00')
         end
       end
 
       describe '#p2p' do
         context 'when response is successful' do
           before do
-            response_body['transaction'].tap do |hsh|
+            response_body.tap do |hsh|
               hsh.delete('authorization')
               hsh['p2p'] = {
                 'auth_code' => '654321',
@@ -356,22 +341,20 @@ describe BeGatewayV3::Client do
           it 'sends p2p request' do
             response = client.p2p(request_params)
 
-            expect(response.transaction['type']).to eq('p2p')
-            expect(response.transaction['p2p']['auth_code']).to eq('654321')
-            expect(response.transaction['p2p']['bank_code']).to eq('00')
+            expect(response.type).to eq('p2p')
+            expect(response.p2p['auth_code']).to eq('654321')
+            expect(response.p2p['bank_code']).to eq('00')
 
-            expect(response.transaction.verify_p2p['bank_fee']).to eq(1.05)
+            expect(response.verify_p2p['bank_fee']).to eq(1.05)
           end
         end
 
         context 'when response is error' do
           let(:response_body) do
             {
-              "response" => {
-                "message" => "Number is invalid.",
-                "errors"  => {
-                  "recipient_card" => {"number" => ["is not a card number"]}
-                }
+              "message" => "Number is invalid.",
+              "errors"  => {
+                "recipient_card" => {"number" => ["is not a card number"]}
               }
             }
           end
@@ -393,44 +376,42 @@ describe BeGatewayV3::Client do
       describe '#tokenization' do
         let(:response_body) do
           {
-            'transaction' => {
-              'customer' => {
-                'ip' => '127.0.0.1',
-                'email' => 'john@example.com'
-              },
-              'credit_card' => {
-                'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e'
-              },
-              'billing_address' => {
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'address' => '1st Street',
-                'country' => 'US',
-                'city' => 'Denver',
-                'zip' => '96002',
-                'state' => 'CO'
-              },
-              'three_d_secure_verification' => {
-                'eci' => '05',
-                'pa_status' => 'Y',
-                'xid' => 'Tk1CMjcyM0g0NFpZMlpWUzE2RlU=',
-                'cavv' => 'AAACAQJwJTd4hwE5SHAlEwAAAAA=',
-                'cavv_algorithm' => '2',
-                'fail_reason' => nil,
-                've_status' => 'Y',
-                'message' => 'Authentication Successful',
-                'status' => 'successful'
-              },
-              'uid' => '4107-310b0da80b',
-              'status' => 'successful',
-              'message' => 'Successfully processed',
-              'amount' => 100,
-              'currency' => 'USD',
-              'description' => 'Test order',
-              'type' => 'tokenization',
-              'tracking_id' => 'your_uniq_number',
-              'language' => 'en'
-            }
+            'customer' => {
+              'ip' => '127.0.0.1',
+              'email' => 'john@example.com'
+            },
+            'credit_card' => {
+              'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e'
+            },
+            'billing_address' => {
+              'first_name' => 'John',
+              'last_name' => 'Doe',
+              'address' => '1st Street',
+              'country' => 'US',
+              'city' => 'Denver',
+              'zip' => '96002',
+              'state' => 'CO'
+            },
+            'three_d_secure_verification' => {
+              'eci' => '05',
+              'pa_status' => 'Y',
+              'xid' => 'Tk1CMjcyM0g0NFpZMlpWUzE2RlU=',
+              'cavv' => 'AAACAQJwJTd4hwE5SHAlEwAAAAA=',
+              'cavv_algorithm' => '2',
+              'fail_reason' => nil,
+              've_status' => 'Y',
+              'message' => 'Authentication Successful',
+              'status' => 'successful'
+            },
+            'uid' => '4107-310b0da80b',
+            'status' => 'successful',
+            'message' => 'Successfully processed',
+            'amount' => 100,
+            'currency' => 'USD',
+            'description' => 'Test order',
+            'type' => 'tokenization',
+            'tracking_id' => 'your_uniq_number',
+            'language' => 'en'
           }
         end
         let(:successful_response) { OpenStruct.new(status: 200, body: response_body) }
@@ -440,8 +421,8 @@ describe BeGatewayV3::Client do
         it 'returns transaction information among with credit card token' do
           response = client.tokenization(request_params)
 
-          expect(response.transaction.uid).to eq('4107-310b0da80b')
-          expect(response.transaction.credit_card['token'])
+          expect(response.uid).to eq('4107-310b0da80b')
+          expect(response.credit_card['token'])
             .to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
         end
       end
@@ -474,30 +455,28 @@ describe BeGatewayV3::Client do
         end
         let(:response_body) do
           {
-            'transaction' => {
-              'recipient' => {
-                'ip' => '127.0.0.1',
-                'email' => 'john@example.com'
-              },
-              'recipient_card' => {
-                'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e'
-              },
-              'recipient_billing_address' => {
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'address' => '1st Street',
-                'country' => 'US',
-                'city' => 'Denver',
-                'zip' => '96002',
-                'state' => 'CO'
-              },
-              'uid' => '4107-310b0da80b',
-              'status' => 'successful',
-              'message' => 'Successfully processed',
-              'description' => 'Test recipient tokenization',
-              'type' => 'recipient_tokenization',
-              'tracking_id' => 'your_uniq_number'
-            }
+            'recipient' => {
+              'ip' => '127.0.0.1',
+              'email' => 'john@example.com'
+            },
+            'recipient_card' => {
+              'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e'
+            },
+            'recipient_billing_address' => {
+              'first_name' => 'John',
+              'last_name' => 'Doe',
+              'address' => '1st Street',
+              'country' => 'US',
+              'city' => 'Denver',
+              'zip' => '96002',
+              'state' => 'CO'
+            },
+            'uid' => '4107-310b0da80b',
+            'status' => 'successful',
+            'message' => 'Successfully processed',
+            'description' => 'Test recipient tokenization',
+            'type' => 'recipient_tokenization',
+            'tracking_id' => 'your_uniq_number'
           }
         end
         let(:successful_response) { OpenStruct.new(status: 200, body: response_body) }
@@ -507,8 +486,8 @@ describe BeGatewayV3::Client do
         it 'returns transaction information among with recipient card token' do
           response = client.recipient_tokenization(request_params)
 
-          expect(response.transaction.uid).to eq('4107-310b0da80b')
-          expect(response.transaction.recipient_card['token'])
+          expect(response.uid).to eq('4107-310b0da80b')
+          expect(response.recipient_card['token'])
             .to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
         end
       end
@@ -524,7 +503,7 @@ describe BeGatewayV3::Client do
               end
             end
             before do
-              response_body['transaction'].tap do |hsh|
+              response_body.tap do |hsh|
                 hsh.delete('authorization')
                 hsh[tr_type.to_s] = {
                   'message' => 'The operation was successfully processed.',
@@ -539,8 +518,8 @@ describe BeGatewayV3::Client do
             it "sends #{tr_type} request" do
               response = client.capture(request_params)
 
-              expect(response.transaction['type']).to eq(tr_type)
-              expect(response.transaction[tr_type]['ref_id']).to eq('8889999')
+              expect(response.type).to eq(tr_type)
+              expect(response[tr_type]['ref_id']).to eq('8889999')
             end
           end
         end
@@ -561,7 +540,7 @@ describe BeGatewayV3::Client do
         end
 
         before do
-          response_body['transaction'].tap do |hsh|
+          response_body.tap do |hsh|
             hsh.delete('authorization')
             hsh['credit'] = {
               'auth_code' => '654327',
@@ -580,9 +559,9 @@ describe BeGatewayV3::Client do
         it 'sends credit request' do
           response = client.credit(request_params)
 
-          expect(response.transaction['type']).to eq('credit')
-          expect(response.transaction['credit']['ref_id']).to eq('777822')
-          expect(response.transaction['credit']['rrn']).to eq('934')
+          expect(response.type).to eq('credit')
+          expect(response.credit['ref_id']).to eq('777822')
+          expect(response.credit['rrn']).to eq('934')
         end
       end
 
@@ -600,8 +579,8 @@ describe BeGatewayV3::Client do
           it 'sends finalize_3ds request' do
             response = client.finalize_3ds(request_params)
 
-            expect(response.transaction['uid']).to eq('4107-310b0da80b')
-            expect(response.transaction['status']).to eq('successful')
+            expect(response['uid']).to eq('4107-310b0da80b')
+            expect(response.status).to eq('successful')
           end
         end
 
@@ -612,15 +591,15 @@ describe BeGatewayV3::Client do
           it 'sends query request' do
             response = client.query(request_params)
 
-            expect(response.transaction['currency']).to eq('USD')
-            expect(response.transaction['amount']).to eq(100)
-            expect(response.transaction['credit_card']['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
+            expect(response.currency).to eq('USD')
+            expect(response.amount).to eq(100)
+            expect(response.credit_card['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
           end
         end
 
         context '#checkup' do
           before do
-            response_body['transaction'].tap do |hsh|
+            response_body.tap do |hsh|
               hsh['be_protected_verification'] = {
                 'status' => 'successful',
                 'white_black_list' => {
@@ -640,8 +619,8 @@ describe BeGatewayV3::Client do
           it 'sends checkup request' do
             response = client.checkup(request_params)
 
-            expect(response.transaction['be_protected_verification']['status']).to eq('successful')
-            expect(response.transaction['be_protected_verification']['rules']['1_123_My Shop']).not_to be_empty
+            expect(response['be_protected_verification']['status']).to eq('successful')
+            expect(response['be_protected_verification']['rules']['1_123_My Shop']).not_to be_empty
           end
         end
 
@@ -649,11 +628,9 @@ describe BeGatewayV3::Client do
           context 'when gateway support close_days transaction' do
             let(:response_body) do
               {
-                'transaction' => {
-                  'status' => 'successful',
-                  'success' => true,
-                  'message' => 'Close day transaction successfully queued.'
-                }
+                'status' => 'successful',
+                'success' => true,
+                'message' => 'Close day transaction successfully queued.'
               }
             end
 
@@ -663,19 +640,17 @@ describe BeGatewayV3::Client do
             it 'sends close_days request' do
               response = client.close_days(gateway_id: 1)
 
-              expect(response.transaction.message).to eq('Close day transaction successfully queued.')
-              expect(response.transaction.success).to eq(true)
-              expect(response.transaction.status).to eq('successful')
+              expect(response.message).to eq('Close day transaction successfully queued.')
+              expect(response.success).to eq(true)
+              expect(response.status).to eq('successful')
             end
           end
 
           context 'when gateway does not support close_days transaction' do
             let(:response_body) do
               {
-                'response' => {
-                  'message' => 'Gateway does not support closing day transaction',
-                  'errors' => { 'base' => 'Transaction is not supported' }
-                }
+                'message' => 'Gateway does not support closing day transaction',
+                'errors' => { 'base' => 'Transaction is not supported' }
               }
             end
             let(:failed_response) { OpenStruct.new(status: 422, body: response_body) }
@@ -694,45 +669,43 @@ describe BeGatewayV3::Client do
         context '#notification' do
           let(:body) {
             {
-              "transaction" => {
-                "uid" => "1-fc77f1e8f0",
-                "status" => "successful",
-                "amount" => nil,
-                "currency" => nil,
-                "description" => nil,
-                "type" => "payment",
-                "payment_method_type" => "credit_card",
-                "tracking_id" => nil,
-                "message" => nil,
-                "test" => false,
-                "created_at" => "2020-11-20T10: 42: 28.786Z",
-                "updated_at" => "2020-11-20T10: 42: 28.786Z",
-                "paid_at" => nil,
-                "expired_at" => nil,
-                "closed_at" => nil,
-                "settled_at" => nil,
-                "language" => "en",
-                "redirect_url" => "http://127.0.0.1:9887/process/1-fc77f1e8f0",
-                "credit_card" => {
-                  "holder" => "Monty Hudson II",
-                  "stamp" => "a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4",
-                  "brand" => "visa",
-                  "last_4" => "0000",
-                  "first_1" => "4",
-                  "bin" => "420000",
-                  "issuer_country" => "US",
-                  "issuer_name" => "Demo Card Issuer",
-                  "product" => nil,
-                  "exp_month" => 12,
-                  "exp_year" => 2020,
-                  "token_provider" => nil,
-                  "token" => nil
-                },
-                "receipt_url" => "default_domain/customer/transactions/1-fc77f1e8f0/06d2b42a8ee79a27c88a3dd0ef8cf12d3f1ebff2cd40d48523ea35d55d0539d4",
-                "id" => "1-fc77f1e8f0",
-                "customer" => nil,
-                "billing_address" => nil
-              }
+              "uid" => "1-fc77f1e8f0",
+              "status" => "successful",
+              "amount" => nil,
+              "currency" => nil,
+              "description" => nil,
+              "type" => "payment",
+              "payment_method_type" => "credit_card",
+              "tracking_id" => nil,
+              "message" => nil,
+              "test" => false,
+              "created_at" => "2020-11-20T10: 42: 28.786Z",
+              "updated_at" => "2020-11-20T10: 42: 28.786Z",
+              "paid_at" => nil,
+              "expired_at" => nil,
+              "closed_at" => nil,
+              "settled_at" => nil,
+              "language" => "en",
+              "redirect_url" => "http://127.0.0.1:9887/process/1-fc77f1e8f0",
+              "credit_card" => {
+                "holder" => "Monty Hudson II",
+                "stamp" => "a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4",
+                "brand" => "visa",
+                "last_4" => "0000",
+                "first_1" => "4",
+                "bin" => "420000",
+                "issuer_country" => "US",
+                "issuer_name" => "Demo Card Issuer",
+                "product" => nil,
+                "exp_month" => 12,
+                "exp_year" => 2020,
+                "token_provider" => nil,
+                "token" => nil
+              },
+              "receipt_url" => "default_domain/customer/transactions/1-fc77f1e8f0/06d2b42a8ee79a27c88a3dd0ef8cf12d3f1ebff2cd40d48523ea35d55d0539d4",
+              "id" => "1-fc77f1e8f0",
+              "customer" => nil,
+              "billing_address" => nil
             }
           }
 
@@ -744,9 +717,9 @@ describe BeGatewayV3::Client do
             response = client.notification(body)
 
             expect(response.status).to eq('successful')
-            expect(response.transaction_type).to eq('payment')
-            expect(response.transaction.uid).to eq('1-fc77f1e8f0')
-            expect(response.transaction.credit_card['stamp']).to eq('a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4')
+            expect(response.type).to eq('payment')
+            expect(response.uid).to eq('1-fc77f1e8f0')
+            expect(response.credit_card['stamp']).to eq('a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4')
           end
         end
       end
@@ -755,13 +728,11 @@ describe BeGatewayV3::Client do
     context 'failed request' do
       let(:response_body) do
         {
-          'response' => {
-            'message' => "Currency can't be blank. Description can't be blank. Amount can't be blank",
-            'errors' => {
-              'currency' => ["can't be blank"],
-              'description' => ["can't be blank"],
-              'amount' => ['must be greater than 0']
-            }
+          'message' => "Currency can't be blank. Description can't be blank. Amount can't be blank",
+          'errors' => {
+            'currency' => ["can't be blank"],
+            'description' => ["can't be blank"],
+            'amount' => ['must be greater than 0']
           }
         }
       end
@@ -778,7 +749,7 @@ describe BeGatewayV3::Client do
       before { allow_any_instance_of(Faraday::Connection).to receive(:post).and_return(failed_response) }
 
       it 'returns errors' do
-        response = client.authorize(request_params)
+        response = client.authorization(request_params)
 
         expect(response.errors.amount).to eq(['must be greater than 0'])
       end
@@ -797,25 +768,25 @@ describe BeGatewayV3::Client do
 
     context 'transaction renotification' do
       let(:request_params) { { uid: '123-uid' } }
-      let(:response_body) { { 'response' => { 'message' => 'Transaction was renotified' } } }
+      let(:response_body) { { 'message' => 'Transaction was renotified' } }
       let(:path) { '/transactions/123-uid/renotify' }
 
       it 'returns message' do
-        res = client.renotify(request_params)
+        response = client.renotify(request_params)
 
-        expect(res.response['message']).to eq('Transaction was renotified')
+        expect(response.message).to eq('Transaction was renotified')
       end
     end
 
     context 'transaction recover' do
-      let(:response_body) { { 'response' => { 'message' => "Transaction 123-uid was updated" } } }
+      let(:response_body) { { 'message' => "Transaction 123-uid was updated" } }
       let(:path) { '/transactions/123-uid/recover' }
       let(:request_params) { { uid: '123-uid', status: 'failed', rrn: '333', bank_code: '111' } }
 
       it 'returns message' do
         res = client.recover(request_params)
 
-        expect(res.response['message']).to eq("Transaction 123-uid was updated")
+        expect(res.message).to eq("Transaction 123-uid was updated")
       end
     end
   end
