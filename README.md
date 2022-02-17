@@ -30,7 +30,6 @@ client = BeGatewayV3::Client.new({
 
 ### Availibale actions:
 * authorization
-* authorize (*DEPRECATED*)
 * capture
 * void
 * payment
@@ -77,11 +76,11 @@ response = client.authorization({
   }
 })
 
-response.transaction.id # => returns id of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.id # => returns id of processed transaciton
+response.status # => returns status of processed transaciton
 
-response.authorization.auth_code
-response.authorization.rrn
+response.transaction.auth_code
+response.transaction.rrn
 ```
 
 ### Transaction Payment
@@ -107,8 +106,8 @@ response = client.refund({
   reason:      'Reason of refund. Ex "Client request"'
 })
 
-response.transaction.uid    # => returns uid of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.uid    # => returns uid of processed transaciton
+response.status # => returns status of processed transaciton
 ```
 
 ### Transaction Capture/Void
@@ -132,8 +131,8 @@ response = client.credit({
   }
 })
 
-response.transaction.uid    # => returns uid of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.uid    # => returns uid of processed transaciton
+response.status # => returns status of processed transaciton
 ```
 
 ### Query Request example
@@ -145,8 +144,8 @@ response = client.query(id: transaction_id)
 
 response = client.query(tracking_id: 'your tracking id')
 
-response.transaction.id # => returns id of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.id # => returns id of processed transaciton
+response.status # => returns status of processed transaciton
 ```
 
 ### Verify P2p
