@@ -210,9 +210,17 @@ describe BeGatewayV3::Client do
         {
           'customer' => {
             'ip' => '127.0.0.1',
-            'email' => 'john@example.com'
+            'email' => 'john@example.com',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'address' => '1st Street',
+            'country' => 'US',
+            'city' => 'Denver',
+            'zip' => '96002',
+            'state' => 'CO'
           },
-          'credit_card' => {
+          'payment_method' => {
+            'payment_method_type' => 'credit_card',
             'holder' => 'John Doe',
             'stamp' => '3709786942408b77017a3aac8390d46d77d181e34554df527a71919a856d0f28',
             'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e',
@@ -222,16 +230,7 @@ describe BeGatewayV3::Client do
             'exp_month' => 5,
             'exp_year' => 2015
           },
-          'billing_address' => {
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'address' => '1st Street',
-            'country' => 'US',
-            'city' => 'Denver',
-            'zip' => '96002',
-            'state' => 'CO'
-          },
-          'authorization' => {
+          'transaction' => {
             'auth_code' => '654321',
             'bank_code' => '00',
             'rrn' => '999',
@@ -242,7 +241,9 @@ describe BeGatewayV3::Client do
             'status' => 'successful'
           },
           'uid' => '4107-310b0da80b',
+          'code' => 'S.0000',
           'status' => 'successful',
+          'friendly_message' => 'The operation is successful.',
           'message' => 'Successfully processed',
           'amount' => 100,
           'currency' => 'USD',
@@ -262,9 +263,9 @@ describe BeGatewayV3::Client do
         expect(response.successful?).to eq(true)
         expect(response['currency']).to eq('USD')
         expect(response['amount']).to eq(100)
-        expect(response['credit_card']['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
+        expect(response['payment_method']['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
         expect(response['customer']['ip']).to eq('127.0.0.1')
-        expect(response['billing_address']['first_name']).to eq('John')
+        expect(response['customer']['first_name']).to eq('John')
         expect(response['uid']).to eq('4107-310b0da80b')
       end
 
@@ -273,7 +274,7 @@ describe BeGatewayV3::Client do
           response = client.authorization(request_params)
 
           expect(response.type).to eq('authorization')
-          expect(response.authorization['auth_code']).to eq('654321')
+          expect(response.transaction['auth_code']).to eq('654321')
         end
       end
 
@@ -286,15 +287,14 @@ describe BeGatewayV3::Client do
           response = client.charge(request_params)
 
           expect(response.type).to eq('authorization')
-          expect(response.authorization['auth_code']).to eq('654321')
+          expect(response.transaction['auth_code']).to eq('654321')
         end
       end
 
       describe '#payment' do
         before do
           response_body.tap do |hsh|
-            hsh.delete('authorization')
-            hsh['payment'] = {
+            hsh['transaction'] = {
               'auth_code' => '654321',
               'bank_code' => '00',
               'rrn' => '999',
@@ -312,8 +312,8 @@ describe BeGatewayV3::Client do
           response = client.payment(request_params)
 
           expect(response['type']).to eq('payment')
-          expect(response['payment']['auth_code']).to eq('654321')
-          expect(response['payment']['bank_code']).to eq('00')
+          expect(response['transaction']['auth_code']).to eq('654321')
+          expect(response['transaction']['bank_code']).to eq('00')
         end
       end
 
@@ -321,8 +321,7 @@ describe BeGatewayV3::Client do
         context 'when response is successful' do
           before do
             response_body.tap do |hsh|
-              hsh.delete('authorization')
-              hsh['p2p'] = {
+              hsh['transaction'] = {
                 'auth_code' => '654321',
                 'bank_code' => '00',
                 'rrn' => '999',
@@ -342,8 +341,8 @@ describe BeGatewayV3::Client do
             response = client.p2p(request_params)
 
             expect(response.type).to eq('p2p')
-            expect(response.p2p['auth_code']).to eq('654321')
-            expect(response.p2p['bank_code']).to eq('00')
+            expect(response.transaction['auth_code']).to eq('654321')
+            expect(response.transaction['bank_code']).to eq('00')
 
             expect(response.verify_p2p['bank_fee']).to eq(1.05)
           end
@@ -504,8 +503,7 @@ describe BeGatewayV3::Client do
             end
             before do
               response_body.tap do |hsh|
-                hsh.delete('authorization')
-                hsh[tr_type.to_s] = {
+                hsh['transaction'] = {
                   'message' => 'The operation was successfully processed.',
                   'ref_id' => '8889999',
                   'gateway_id' => 152,
@@ -519,7 +517,7 @@ describe BeGatewayV3::Client do
               response = client.capture(request_params)
 
               expect(response.type).to eq(tr_type)
-              expect(response[tr_type]['ref_id']).to eq('8889999')
+              expect(response['transaction']['ref_id']).to eq('8889999')
             end
           end
         end
@@ -541,8 +539,7 @@ describe BeGatewayV3::Client do
 
         before do
           response_body.tap do |hsh|
-            hsh.delete('authorization')
-            hsh['credit'] = {
+            hsh['transaction'] = {
               'auth_code' => '654327',
               'bank_code' => '00',
               'rrn' => '934',
@@ -560,8 +557,8 @@ describe BeGatewayV3::Client do
           response = client.credit(request_params)
 
           expect(response.type).to eq('credit')
-          expect(response.credit['ref_id']).to eq('777822')
-          expect(response.credit['rrn']).to eq('934')
+          expect(response.transaction['ref_id']).to eq('777822')
+          expect(response.transaction['rrn']).to eq('934')
         end
       end
 
@@ -593,7 +590,7 @@ describe BeGatewayV3::Client do
 
             expect(response.currency).to eq('USD')
             expect(response.amount).to eq(100)
-            expect(response.credit_card['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
+            expect(response.payment_method['token']).to eq('40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e')
           end
         end
 
@@ -619,7 +616,7 @@ describe BeGatewayV3::Client do
           it 'sends checkup request' do
             response = client.checkup(request_params)
 
-            expect(response['be_protected_verification']['status']).to eq('successful')
+            expect(response.be_protected_verification['status']).to eq('successful')
             expect(response['be_protected_verification']['rules']['1_123_My Shop']).not_to be_empty
           end
         end
@@ -671,6 +668,8 @@ describe BeGatewayV3::Client do
             {
               "uid" => "1-fc77f1e8f0",
               "status" => "successful",
+              'code' => 'S.0000',
+              'friendly_message' => 'The operation is successful.',    
               "amount" => nil,
               "currency" => nil,
               "description" => nil,
@@ -687,7 +686,8 @@ describe BeGatewayV3::Client do
               "settled_at" => nil,
               "language" => "en",
               "redirect_url" => "http://127.0.0.1:9887/process/1-fc77f1e8f0",
-              "credit_card" => {
+              "payment_method" => {
+                "payment_method_type" => "credit_card",
                 "holder" => "Monty Hudson II",
                 "stamp" => "a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4",
                 "brand" => "visa",
@@ -702,10 +702,11 @@ describe BeGatewayV3::Client do
                 "token_provider" => nil,
                 "token" => nil
               },
-              "receipt_url" => "default_domain/customer/transactions/1-fc77f1e8f0/06d2b42a8ee79a27c88a3dd0ef8cf12d3f1ebff2cd40d48523ea35d55d0539d4",
+              'links' => {
+                "receipt_url" => "default_domain/customer/transactions/1-fc77f1e8f0/06d2b42a8ee79a27c88a3dd0ef8cf12d3f1ebff2cd40d48523ea35d55d0539d4"
+              },
               "id" => "1-fc77f1e8f0",
               "customer" => nil,
-              "billing_address" => nil
             }
           }
 
@@ -719,7 +720,7 @@ describe BeGatewayV3::Client do
             expect(response.status).to eq('successful')
             expect(response.type).to eq('payment')
             expect(response.uid).to eq('1-fc77f1e8f0')
-            expect(response.credit_card['stamp']).to eq('a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4')
+            expect(response.payment_method['stamp']).to eq('a825df7faba8804619aef7a6d5a5821ec292fce04e3e43933ca33d0692df90b4')
           end
         end
       end
