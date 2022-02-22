@@ -34,7 +34,6 @@ client = BeGatewayV3::Client.new({
 * void
 * payment
 * refund
-* credit
 * checkup
 * tokenization
 * payout
@@ -117,23 +116,6 @@ response = client.capture(params)
 response = client.void(params)
 ```
 Where `params` have same structure as **Refund**
-
-### Transaction Credit example
-
-``` ruby
-response = client.credit({
-  amount: 100,
-  currency: "USD",
-  description: "Test transaction",
-  tracking_id: "tracking_id_000",
-  credit_card: {
-    token: "Token from successful Payment/Authorization transaction"
-  }
-})
-
-response.uid    # => returns uid of processed transaciton
-response.status # => returns status of processed transaciton
-```
 
 ### Query Request example
 

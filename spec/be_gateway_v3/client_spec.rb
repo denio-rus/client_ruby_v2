@@ -523,45 +523,6 @@ describe BeGatewayV3::Client do
         end
       end
 
-      context '#credit' do
-        let(:request_params) do
-          {
-            'amount' => 100,
-            'currency' => 'USD',
-            'description' => 'Test transaction',
-            'tracking_id' => 'tracking_id_000',
-            'language' => 'en',
-            'credit_card' => {
-              'token' => '40bd001563085fc35165329ea1ff5c5ecbdbbeef40bd001563085fc35165329e'
-            }
-          }
-        end
-
-        before do
-          response_body.tap do |hsh|
-            hsh['transaction'] = {
-              'auth_code' => '654327',
-              'bank_code' => '00',
-              'rrn' => '934',
-              'ref_id' => '777822',
-              'message' => 'Credit was approved',
-              'gateway_id' => 2124,
-              'billing_descriptor' => 'TEST GATEWAY BILLING DESCRIPTOR',
-              'status' => 'successful'
-            }
-            hsh['type'] = 'credit'
-          end
-        end
-
-        it 'sends credit request' do
-          response = client.credit(request_params)
-
-          expect(response.type).to eq('credit')
-          expect(response.transaction['ref_id']).to eq('777822')
-          expect(response.transaction['rrn']).to eq('934')
-        end
-      end
-
       context 'other' do
         context '#finalize_3ds' do
           before { allow_any_instance_of(Faraday::Connection).to receive(:post).and_return(successful_response) }

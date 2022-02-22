@@ -20,7 +20,6 @@ describe BeGatewayV3::AsyncClient do
       it { should respond_to :authorization }
       it { should respond_to :capture }
       it { should respond_to :void }
-      it { should respond_to :credit }
       it { should respond_to :payout }
       it { should respond_to :refund }
     end
