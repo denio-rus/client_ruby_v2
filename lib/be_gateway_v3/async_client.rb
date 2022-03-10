@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV3
   class AsyncClient < Client
     def result(params)
       path = "/result/#{params[:request_id]}"

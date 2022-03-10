@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV3
   module Connection
     extend ActiveSupport::Concern
     extend Forwardable
@@ -17,6 +17,7 @@ module BeGateway
       @opts = params[:options] || {}
       @rack_app = params[:rack_app]
       @passed_headers = params[:headers]
+      @api_version = params[:api_version].to_s
     end
 
     attr_reader :passed_headers
@@ -37,13 +38,10 @@ module BeGateway
             OpenStruct.new(
               status: 500,
               body: {
-                'response' => {
-                  'message' => 'Gateway is temporarily unavailable',
-                  'errors' => {
-                    'gateway' => 'is temporarily unavailable'
-                  }
-                }
-              }
+                      'message' => 'Gateway is temporarily unavailable',
+                      'friendly_message' => 'Gateway is temporarily unavailable',
+                      'errors' => {'gateway' => 'is temporarily unavailable' }
+                    }
             )
           end
 
@@ -57,6 +55,7 @@ module BeGateway
     end
 
     def connection
+      apply_api_version
       @connection ||= Faraday::Connection.new(url, opts || {}) do |conn|
         conn.options[:open_timeout] ||= DEFAULT_OPEN_TIMEOUT
         conn.options[:timeout] ||= DEFAULT_TIMEOUT
@@ -73,6 +72,13 @@ module BeGateway
         else
           conn.adapter Faraday.default_adapter
         end
+      end
+    end
+
+    def apply_api_version
+      if @api_version.match(/^\d+$/)
+        api_header = { 'X-API-VERSION' => @api_version }
+        @passed_headers = @passed_headers ? @passed_headers.merge(api_header) : api_header
       end
     end
 

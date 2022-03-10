@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'be_gateway/version'
+require 'be_gateway_v3/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = "be_gateway"
-  gem.version       = BeGateway::VERSION
+  gem.name          = "be_gateway_v3"
+  gem.version       = BeGatewayV3::VERSION
   gem.authors       = ["Pavel Gabriel", "Mac Shifford"]
   gem.email         = ["alovak@gmail.com", "shiroginne@gmail.com"]
   gem.description   = %q{Client for BeGateway processing platform}

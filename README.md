@@ -6,7 +6,7 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'be_gateway'
+    gem 'be_gateway_v3'
 
 And then execute:
 
@@ -14,14 +14,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install be_gateway
+    $ gem install be_gateway_v3
 
 ## Usage
 
 ### Intialization client
 
 ``` ruby
-client = BeGateway::Client.new({
+client = BeGatewayV3::Client.new({
   shop_id: 'YOUR SHOP ID',
   secret_key: 'YOUR SHOP SECRET KEY',
   url: 'YOUR GATEWAY URL'
@@ -30,12 +30,10 @@ client = BeGateway::Client.new({
 
 ### Availibale actions:
 * authorization
-* authorize (*DEPRECATED*)
 * capture
 * void
 * payment
 * refund
-* credit
 * checkup
 * tokenization
 * payout
@@ -77,11 +75,11 @@ response = client.authorization({
   }
 })
 
-response.transaction.id # => returns id of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.id # => returns id of processed transaciton
+response.status # => returns status of processed transaciton
 
-response.authorization.auth_code
-response.authorization.rrn
+response.transaction.auth_code
+response.transaction.rrn
 ```
 
 ### Transaction Payment
@@ -107,8 +105,8 @@ response = client.refund({
   reason:      'Reason of refund. Ex "Client request"'
 })
 
-response.transaction.uid    # => returns uid of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.uid    # => returns uid of processed transaciton
+response.status # => returns status of processed transaciton
 ```
 
 ### Transaction Capture/Void
@@ -119,23 +117,6 @@ response = client.void(params)
 ```
 Where `params` have same structure as **Refund**
 
-### Transaction Credit example
-
-``` ruby
-response = client.credit({
-  amount: 100,
-  currency: "USD",
-  description: "Test transaction",
-  tracking_id: "tracking_id_000",
-  credit_card: {
-    token: "Token from successful Payment/Authorization transaction"
-  }
-})
-
-response.transaction.uid    # => returns uid of processed transaciton
-response.transaction.status # => returns status of processed transaciton
-```
-
 ### Query Request example
 
 ``` ruby
@@ -145,8 +126,8 @@ response = client.query(id: transaction_id)
 
 response = client.query(tracking_id: 'your tracking id')
 
-response.transaction.id # => returns id of processed transaciton
-response.transaction.status # => returns status of processed transaciton
+response.id # => returns id of processed transaciton
+response.status # => returns status of processed transaciton
 ```
 
 ### Verify P2p

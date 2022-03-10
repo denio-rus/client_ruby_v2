@@ -1,4 +1,4 @@
-module BeGateway
+module BeGatewayV3
   class ErrorResponse < Base
     def status
       'error'
@@ -9,11 +9,7 @@ module BeGateway
     end
 
     def errors
-      @errors ||= Errors.new(self['response']['errors'])
-    end
-
-    def message
-      @message ||= self['response']['message']
+      @errors ||= Errors.new(self['errors'])
     end
 
     private

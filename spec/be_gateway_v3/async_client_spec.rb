@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe BeGateway::AsyncClient do
+describe BeGatewayV3::AsyncClient do
   let(:params) do
     {
       shop_id: 1,
@@ -20,7 +20,6 @@ describe BeGateway::AsyncClient do
       it { should respond_to :authorization }
       it { should respond_to :capture }
       it { should respond_to :void }
-      it { should respond_to :credit }
       it { should respond_to :payout }
       it { should respond_to :refund }
     end
@@ -59,7 +58,7 @@ describe BeGateway::AsyncClient do
         it 'returns success response' do
           response = subject
 
-          expect(response.status).to eq(200)
+          expect(response.http_status_code).to eq(200)
           expect(response.successful?).to eq(true)
           expect(response.failed?).to eq(false)
           expect(response.processing?).to eq(true)
@@ -96,7 +95,7 @@ describe BeGateway::AsyncClient do
       it 'returns response' do
         res = client.result(request_params)
 
-        expect(res.status).to eq(200)
+        expect(res.http_status_code).to eq(200)
         expect(res.successful?).to eq(true)
         expect(res.failed?).to eq(false)
         expect(res.processing?).to eq(false)
@@ -125,9 +124,9 @@ describe BeGateway::AsyncClient do
       it 'returns response' do
         res = client.result(request_params)
 
-        expect(res.status).to eq(425)
+        expect(res.http_status_code).to eq(425)
         expect(res.successful?).to eq(false)
-        expect(res.failed?).to eq(true)
+        expect(res.failed?).to eq(false)
         expect(res.processing?).to eq(true)
       end
     end

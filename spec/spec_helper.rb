@@ -5,7 +5,7 @@ require 'pry'
 
 Bundler.setup
 
-require 'be_gateway'
+require 'be_gateway_v3'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
